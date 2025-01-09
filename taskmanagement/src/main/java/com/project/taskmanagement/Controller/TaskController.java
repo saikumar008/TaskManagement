@@ -1,6 +1,7 @@
 package com.project.taskmanagement.Controller;
 
 import com.project.taskmanagement.DTO.TaskDTO;
+import com.project.taskmanagement.ENUM.TaskStatus;
 import com.project.taskmanagement.Service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -58,6 +59,12 @@ public class TaskController {
                                                      @RequestBody Map<String, Object> updates) {
         TaskDTO updatedTask = taskService.partialUpdateTask(id, updates);
         return ResponseEntity.ok(updatedTask);
+    }
+
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<TaskDTO>> getTasksByStatus(@PathVariable TaskStatus status) {
+        List<TaskDTO> tasks = taskService.getTasksByStatus(status);
+        return ResponseEntity.ok(tasks);
     }
 
 }

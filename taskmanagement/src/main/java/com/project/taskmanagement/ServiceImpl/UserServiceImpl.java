@@ -8,6 +8,7 @@ import com.project.taskmanagement.Repository.UserRepository;
 import com.project.taskmanagement.Service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,12 +26,22 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private ModelMapper userMapper;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public UserDTO createUser(UserDTO userDTO) {
         User user = new User();
         user.setName(userDTO.getName());
         user.setEmail(userDTO.getEmail());
+//        //include password with passwordencoder
+//        user.setPassword(userDTO.getPassword());
         user.setRole(userDTO.getRole());
+
+        // Only encode and update password if a new password is provided
+        if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        }
 
         User savedUser = userRepository.save(user);
         return mapToDTO(savedUser);
@@ -92,6 +103,7 @@ public class UserServiceImpl implements UserService {
         userDTO.setName(user.getName());
         userDTO.setEmail(user.getEmail());
         userDTO.setRole(user.getRole());
+        userDTO.setPassword(user.getPassword());
         return userDTO;
     }
 }

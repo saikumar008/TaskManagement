@@ -1,6 +1,7 @@
 package com.project.taskmanagement.Service;
 
 import com.project.taskmanagement.DTO.TaskDTO;
+import com.project.taskmanagement.ENUM.TaskStatus;
 
 import java.util.List;
 import java.util.Map;
@@ -14,5 +15,6 @@ public interface TaskService {
     TaskDTO updateTask(UUID id, TaskDTO taskDTO);
     void deleteTask(UUID id);
     public TaskDTO partialUpdateTask(UUID id, Map<String, Object> updates);
+    public List<TaskDTO> getTasksByStatus(TaskStatus status);
 }
 

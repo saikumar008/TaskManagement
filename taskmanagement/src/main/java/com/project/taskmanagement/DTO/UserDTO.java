@@ -3,16 +3,28 @@ package com.project.taskmanagement.DTO;
 
 import com.project.taskmanagement.ENUM.UserRole;
 import com.project.taskmanagement.Entity.Task;
+import jakarta.persistence.Entity;
+import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.UUID;
 
 @Data
+@Builder
+//@NoArgsConstructor
+//@AllArgsConstructor
+@Getter
+@Setter
 public class UserDTO {
     private UUID id;
     private String name;
     private String email;
+    private String password;
     private UserRole role;
     private List<Task> assignedTasks;
 
@@ -20,7 +32,7 @@ public class UserDTO {
     }
 
     //constructor with all fields
-    public UserDTO(UUID id, String name, String email, UserRole role, List<Task> assignedTasks) {
+    public UserDTO(UUID id, String name, String email,String password ,UserRole role, List<Task> assignedTasks) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -52,6 +64,13 @@ public class UserDTO {
         this.email = email;
     }
 
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public UserRole getRole() {
         return role;
     }
@@ -73,6 +92,7 @@ public class UserDTO {
         private UUID id;
         private String name;
         private String email;
+        private String password;
         private UserRole role;
         private List<Task> assignedTasks;
 
@@ -91,6 +111,11 @@ public class UserDTO {
             return this;
         }
 
+        public UserDTOBuilder password(String password) {
+            this.password = password;
+            return this;
+        }
+
         public UserDTOBuilder role(UserRole role) {
             this.role = role;
             return this;
@@ -102,8 +127,9 @@ public class UserDTO {
         }
 
         public UserDTO build() {
-            return new UserDTO(id, name, email, role, assignedTasks);
+            return new UserDTO(id, name, email,password ,role, assignedTasks);
         }
     }
+
 }
 

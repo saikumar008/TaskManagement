@@ -2,7 +2,9 @@ package com.project.taskmanagement.DTO;
 
 import com.project.taskmanagement.ENUM.Priority;
 import com.project.taskmanagement.ENUM.TaskStatus;
-import lombok.Data;
+import com.project.taskmanagement.Entity.User;
+import jakarta.persistence.Entity;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,6 +12,11 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
+@Builder
+//@NoArgsConstructor
+//@AllArgsConstructor
+@Getter
+@Setter
 public class TaskDTO {
     private UUID id;
     private String title;
@@ -18,15 +25,15 @@ public class TaskDTO {
     private String deadline;
     private TaskStatus status;
     private String progressNotes;
-    private UUID createdBy; // ID of the creator
+    private UserDTO createdBy; // ID of the creator
     private LocalDateTime createdAt;
     private LocalDate completionDate;
-    private UUID assignee; // ID of the assignee
+    private UserDTO assignee; // ID of the assignee
     private String additionalNotes;
     private List<String> inputSources; // Input source types (e.g., Notebook, Voice, Video)
 
 
-    public TaskDTO(UUID id, String title, String description, Priority priority, String deadline, TaskStatus status, String progressNotes, UUID createdBy, LocalDateTime createdAt, LocalDate completionDate, UUID assignee, String additionalNotes, List<String> inputSources) {
+    public TaskDTO(UUID id, String title, String description, Priority priority, String deadline, TaskStatus status, String progressNotes, UserDTO createdBy, LocalDateTime createdAt, LocalDate completionDate, UserDTO assignee, String additionalNotes, List<String> inputSources) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -102,11 +109,11 @@ public class TaskDTO {
         this.progressNotes = progressNotes;
     }
 
-    public UUID getCreatedBy() {
+    public UserDTO getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(UUID createdBy) {
+    public void setCreatedBy(UserDTO createdBy) {
         this.createdBy = createdBy;
     }
 
@@ -126,11 +133,11 @@ public class TaskDTO {
         this.completionDate = completionDate;
     }
 
-    public UUID getAssignee() {
+    public UserDTO getAssignee() {
         return assignee;
     }
 
-    public void setAssignee(UUID assignee) {
+    public void setAssignee(UserDTO assignee) {
         this.assignee = assignee;
     }
 
@@ -159,10 +166,10 @@ public class TaskDTO {
         private String deadline;
         private TaskStatus status;
         private String progressNotes;
-        private UUID createdBy;
+        private UserDTO createdBy;
         private LocalDateTime createdAt;
         private LocalDate completionDate;
-        private UUID assignee;
+        private UserDTO assignee;
         private String additionalNotes;
         private List<String> inputSources;
 
@@ -201,7 +208,7 @@ public class TaskDTO {
             return this;
         }
 
-        public TaskDTOBuilder createdBy(UUID createdBy) {
+        public TaskDTOBuilder createdBy(UserDTO createdBy) {
             this.createdBy = createdBy;
             return this;
         }
@@ -216,7 +223,7 @@ public class TaskDTO {
             return this;
         }
 
-        public TaskDTOBuilder assignee(UUID assignee) {
+        public TaskDTOBuilder assignee(UserDTO assignee) {
             this.assignee = assignee;
             return this;
         }

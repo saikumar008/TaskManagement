@@ -1,13 +1,17 @@
 package com.project.taskmanagement.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.project.taskmanagement.ENUM.Priority;
 import com.project.taskmanagement.ENUM.TaskStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDate;
@@ -16,8 +20,12 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-@NoArgsConstructor
+@Builder
 @Entity
+//@NoArgsConstructor
+//@AllArgsConstructor
+@Getter
+@Setter
 @Table(name = "tasks")
 public class Task {
 
@@ -53,6 +61,7 @@ public class Task {
     private String progressNotes;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"createdTasks", "assignedTasks"})
     @JoinColumn(name = "created_by")
     private User createdBy;
 
@@ -63,10 +72,11 @@ public class Task {
     private LocalDate completionDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"createdTasks", "assignedTasks"})
     @JoinColumn(name = "assignee_id") // Foreign key to User
     private User assignee;  // The user assigned to the task
 
-    @Lob
+//    @Lob
     @Column(name = "additional_notes")
     private String additionalNotes;
 
@@ -287,6 +297,7 @@ public class Task {
             return new Task(id, title, description, priority, deadline, inputSources, status, progressNotes, createdBy, createdAt, completionDate, assignee, additionalNotes);
         }
     }
+
 }
 
 

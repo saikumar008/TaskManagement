@@ -3,6 +3,7 @@ package com.project.taskmanagement.ServiceImpl;
 
 import com.project.taskmanagement.CustomException.ResourceNotFoundException;
 import com.project.taskmanagement.DTO.TaskDTO;
+import com.project.taskmanagement.DTO.UserDTO;
 import com.project.taskmanagement.ENUM.Priority;
 import com.project.taskmanagement.ENUM.TaskStatus;
 import com.project.taskmanagement.Entity.Task;
@@ -48,12 +49,12 @@ public class TaskServiceImpl implements TaskService {
         task.setAdditionalNotes(taskDTO.getAdditionalNotes());
 
         // Assigning Creator and Assignee
-        User creator = userRepository.findById(taskDTO.getCreatedBy())
+        User creator = userRepository.findByName(taskDTO.getCreatedBy().getName())
                 .orElseThrow(() -> new RuntimeException("Creator not found with id: " + taskDTO.getCreatedBy()));
         task.setCreatedBy(creator);
 
         if (taskDTO.getAssignee() != null) {
-            User assignee = userRepository.findById(taskDTO.getAssignee())
+            User assignee = userRepository.findByName(taskDTO.getAssignee().getName())
                     .orElseThrow(() -> new RuntimeException("Assignee not found with id: " + taskDTO.getAssignee()));
             task.setAssignee(assignee);
         }
@@ -96,7 +97,7 @@ public class TaskServiceImpl implements TaskService {
         task.setAdditionalNotes(taskDTO.getAdditionalNotes());
 
         if (taskDTO.getAssignee() != null) {
-            User assignee = userRepository.findById(taskDTO.getAssignee())
+            User assignee = userRepository.findById(taskDTO.getAssignee().getId())
                     .orElseThrow(() -> new RuntimeException("Assignee not found with id: " + taskDTO.getAssignee()));
             task.setAssignee(assignee);
         }
@@ -126,11 +127,25 @@ public class TaskServiceImpl implements TaskService {
         taskDTO.setAdditionalNotes(task.getAdditionalNotes());
 
         if (task.getCreatedBy() != null) {
-            taskDTO.setCreatedBy(task.getCreatedBy().getId());
+            User createdBy = userRepository.findByName(task.getCreatedBy().getName())
+                    .orElse(null);
+
+            if (createdBy != null) {
+                UserDTO createdByDTO = convertToUserDTO(createdBy);
+                taskDTO.setCreatedBy(createdByDTO);
+            }
         }
+
         if (task.getAssignee() != null) {
-            taskDTO.setAssignee(task.getAssignee().getId());
+            User assignee = userRepository.findByName(task.getAssignee().getName())
+                    .orElse(null);
+
+            if (assignee != null) {
+                UserDTO assigneeDTO = convertToUserDTO(assignee);
+                taskDTO.setAssignee(assigneeDTO);
+            }
         }
+
 
         return taskDTO;
     }
@@ -177,6 +192,25 @@ public class TaskServiceImpl implements TaskService {
         return modelMapper.map(savedTask, TaskDTO.class);
     }
 
+    @Override
+    public List<TaskDTO> getTasksByStatus(TaskStatus status) {
+        List<Task> tasks = taskRepository.getTasksByStatus(status);
+        return tasks.stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
+
+    private UserDTO convertToUserDTO(User user) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getId());
+        userDTO.setName(user.getName());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setRole(user.getRole());
+
+        // Set other necessary fields
+        return userDTO;
+    }
 
 }
 
